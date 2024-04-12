@@ -29,7 +29,7 @@ Thread button3Thread;
 
 char const *demoStory = "Very long story description."; 
 
-int button3counter = 0;
+int button1counter = 0;
 
 void button1Fn(){
     button1Semaphore.release();
@@ -54,21 +54,21 @@ void button3Fn(){
     }
 }*/
 
-/*void Scroll(char const *text){
-    while(strlen(text)> 16){
-        for(int i = 0; i<(strlen(text)-14); ++i){
-            //lcd.cls();
-            lcd.locate(0,i);
-            lcd.printf("%c", text[i]);
-            text = text + 1;
-            thread_sleep_for(100);
-        }
+void button1count(){
+    if (button1 == false){
+        button1counter++;
 
+    }
+}
+
+void chooseAction(int button1counter){
+    if (button1counter == 1){
 
     }
 
-}*/
+}
 
+//Functions to scroll text
 void showletters(int printStart, int startLetter, char const *text){
     lcd.locate(printStart,0);
     for(int letter = startLetter; letter<=startLetter+15; ++letter){
@@ -81,18 +81,6 @@ void showletters(int printStart, int startLetter, char const *text){
 void Scroll(char const *text){
     for (int letter = 0; letter<= strlen(text)-16; ++letter){
         showletters(0,letter, text);
-    }
-}
-
-void buttonpress(char const *text){
-    if(button3 == false){
-        if(button3counter <strlen(text)){
-            button3counter++;
-
-        }
-        else if(button3counter == strlen(text)){
-            button3counter =0;
-        }
     }
 }
 
@@ -136,15 +124,15 @@ void scene1Fn(){
 void scene2Fn(){
     while(true){
         button3Semaphore.acquire();
-        lcd.cls();
+        /*lcd.cls();
         lcd.locate(0,0);
         printf("You enter a plain.");
         lcd.locate(0,1);
         printf("...");
 
-        //thread_sleep_for(5000);
+        //thread_sleep_for(5000);*/
 
-        /*lcd.cls();
+        lcd.cls();
         lcd.locate(0,0);
         Scroll("You encounter a goblin:");
 
@@ -155,15 +143,18 @@ void scene2Fn(){
         lcd.printf("Hide");
 
         lcd.locate(9,1);
-        lcd.printf("Fight");*/
-    }
-}
+        lcd.printf("Fight");
 
-void confirmedFn(){
-    while(true){
+        button1count();
         
     }
 }
+
+/*void confirmedFn(){
+    while(true){
+        
+    }
+}*/
 
  
 
