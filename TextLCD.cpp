@@ -22,6 +22,7 @@
 
 #include "TextLCD.h"
 #include "mbed.h"
+#include "string.h"
 
 TextLCD::TextLCD(PinName rs, PinName e, PinName d4, PinName d5,
                  PinName d6, PinName d7, LCDType type) : _rs(rs),
@@ -30,6 +31,7 @@ TextLCD::TextLCD(PinName rs, PinName e, PinName d4, PinName d5,
 
     _e  = 1;
     _rs = 0;            // command mode
+
 
     thread_sleep_for(15);        // thread_sleep_for 15ms to ensure powered up
 
