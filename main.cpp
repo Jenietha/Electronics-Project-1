@@ -19,54 +19,30 @@ InterruptIn button3(D7, PullUp);
 
 TextLCD lcd(D0, D1, D2, D3, D4, D5, TextLCD::LCD16x2); // Connect these nucleo pins to RS, E, D4, D5, D6 and D7 pins of the LCD
 
-Semaphore button1Semaphore(0,1);
-Semaphore button2Semaphore(0,1);
-Semaphore button3Semaphore(0,1);
+int button1_right = 0;
+int button2_left = 0;
+int cursorposition = 0;
 
-Thread button1Thread;
-Thread button2Thread;
-Thread button3Thread;
+const char choice1 = 'a';
+const char choice2 = 'b';
+const char choice3 = 'c';
 
-char const *demoStory = "Very long story description."; 
-
-int button1counter = 0;
-
-void button1Fn(){
-    button1Semaphore.release();
-
-}
-
-void button2Fn(){
-    button2Semaphore.release();
-
-}
-
-void button3Fn(){
-    button3Semaphore.release();
-}
-
-/*void button1ThreadFn(){
-    while(true){
-        button1Semaphore.acquire();
-        lcd.cls();
-        lcd.locate(0,0);
-        lcd.printf("Start game");
+int button1right_counter(){
+    if(button1 == false){
+        ++button1_right;
     }
-}*/
-
-void button1count(){
-    if (button1 == false){
-        button1counter++;
-
-    }
+    return button1_right;
 }
 
-void chooseAction(int button1counter){
-    if (button1counter == 1){
-
+int button2left_counter(){
+    if(button2 == false){
+        ++button2_left;    
     }
-
+    return button2_left;
 }
+
+
+
 
 //Functions to scroll text
 void showletters(int printStart, int startLetter, char const *text){
@@ -84,97 +60,102 @@ void Scroll(char const *text){
     }
 }
 
+//Function to blink characters - to show they are selected
+void blinktext(const char text1, const char text2, const char text3){
 
-
-void button2ThreadFn(){
-    while(true){
-        button2Semaphore.acquire();
-        lcd.cls();
-        lcd.locate(0,0);
-        Scroll(demoStory);
-        //buttonpress(demoStory);
-
+    /*if (button1_right == 1){
         lcd.locate(0,1);
-        lcd.printf("A");
+        lcd.printf("%c", text1);
+        thread_sleep_for(500);
+        lcd.locate(0,1);
+        lcd.printf(" ");
+        thread_sleep_for(500);
+    }
 
+    if (button1_right == 2){
         lcd.locate(3,1);
-        lcd.printf("B");
+        lcd.printf("%c",text2);
+        thread_sleep_for(500);
+        lcd.locate(3,1);
+        lcd.printf(" ");
+        thread_sleep_for(500);
+    }
 
+    if (button1_right == 3){
         lcd.locate(6,1);
-        lcd.printf("C");
+        lcd.printf("%c",text3);
+        thread_sleep_for(500);
+        lcd.locate(6,1);
+        lcd.printf(" ");
+        thread_sleep_for(500);
+    }*/
 
-        lcd.locate(9,1);
-        lcd.printf("D");
-
+    if (button1_right % 3 == 0 && button1_right % 2 != 0){
+        lcd.locate(6,1);
+        lcd.printf("%c",text3);
+        thread_sleep_for(500);
+        lcd.locate(6,1);
+        lcd.printf(" ");
+        thread_sleep_for(500);
     }
+    else{
+        if(button1_right % 2 == 0){
+            lcd.locate(3,1);
+            lcd.printf("%c",text2);
+            thread_sleep_for(500);
+            lcd.locate(3,1);
+            lcd.printf(" ");
+            thread_sleep_for(500);
+        }
+        else{
+            lcd.locate(0,1);
+            lcd.printf("%c", text1);
+            thread_sleep_for(500);
+            lcd.locate(0,1);
+            lcd.printf(" ");
+            thread_sleep_for(500);
+        }
+    }
+
+    
+
+
+
 }
 
-void scene1Fn(){
-    while(true){
-        button2Semaphore.acquire();
-        lcd.cls();
-        lcd.locate(0,0);
-        Scroll("You leave the village. Choose the direction:");
 
-        lcd.locate(0,1);
-        lcd.printf("A. Forward");
-    }
-}
-
-void scene2Fn(){
-    while(true){
-        button3Semaphore.acquire();
-        /*lcd.cls();
-        lcd.locate(0,0);
-        printf("You enter a plain.");
-        lcd.locate(0,1);
-        printf("...");
-
-        //thread_sleep_for(5000);*/
-
-        lcd.cls();
-        lcd.locate(0,0);
-        Scroll("You encounter a goblin:");
-
-        lcd.locate(0,1);
-        lcd.printf("Run");
-
-        lcd.locate(4,1);
-        lcd.printf("Hide");
-
-        lcd.locate(9,1);
-        lcd.printf("Fight");
-
-        button1count();
-        
-    }
-}
-
-/*void confirmedFn(){
-    while(true){
-        
-    }
-}*/
 
  
 
 int main() 
 {
-    lcd.cls(); 
-
-    //button1Thread.start(button1ThreadFn);
-    button2Thread.start(scene1Fn);
-    button3Thread.start(scene2Fn);
-
-    button1.fall(button1Fn);
-    button2.fall(button2Fn);
-    button3.fall(button3Fn);
-
-    lcd.printf("Game title\n");
-
-
 
     while(true){
+
+        button1right_counter();
+        button2left_counter();
+
+        while(button1 == false){
+            printf("Right button count: %d\n", button1_right);
+            thread_sleep_for(1000);
+        }
+
+        while(button2 == false){
+            printf("Left button count: %d\n", button2_left);
+            thread_sleep_for(1000);
+        }
+        
+
+        lcd.locate(0,1);
+        lcd.printf("%c",choice1);
+        lcd.locate(3,1);
+        lcd.printf("%c",choice2);
+        lcd.locate(6,1);
+        lcd.printf("%c",choice3);
+
+        blinktext(choice1, choice2, choice3);
+
+        
 
         sleep();
 
