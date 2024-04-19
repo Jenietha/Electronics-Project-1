@@ -19,9 +19,9 @@ InterruptIn button3(D7, PullUp);
 
 TextLCD lcd(D0, D1, D2, D3, D4, D5, TextLCD::LCD16x2); // Connect these nucleo pins to RS, E, D4, D5, D6 and D7 pins of the LCD
 
-int button1_right = 0;
+int button1_right = 1;
 int button2_left = 0;
-int cursorposition = 0;
+//int cursorposition = 0;
 
 const char choice1 = 'a';
 const char choice2 = 'b';
@@ -63,33 +63,6 @@ void Scroll(char const *text){
 //Function to blink characters - to show they are selected
 void blinktext(const char text1, const char text2, const char text3){
 
-    /*if (button1_right == 1){
-        lcd.locate(0,1);
-        lcd.printf("%c", text1);
-        thread_sleep_for(500);
-        lcd.locate(0,1);
-        lcd.printf(" ");
-        thread_sleep_for(500);
-    }
-
-    if (button1_right == 2){
-        lcd.locate(3,1);
-        lcd.printf("%c",text2);
-        thread_sleep_for(500);
-        lcd.locate(3,1);
-        lcd.printf(" ");
-        thread_sleep_for(500);
-    }
-
-    if (button1_right == 3){
-        lcd.locate(6,1);
-        lcd.printf("%c",text3);
-        thread_sleep_for(500);
-        lcd.locate(6,1);
-        lcd.printf(" ");
-        thread_sleep_for(500);
-    }*/
-
     if (button1_right % 3 == 0 && button1_right % 2 != 0){
         lcd.locate(6,1);
         lcd.printf("%c",text3);
@@ -116,13 +89,24 @@ void blinktext(const char text1, const char text2, const char text3){
             thread_sleep_for(500);
         }
     }
-
-    
-
-
-
 }
 
+void buttonconfirm(int button1_right){
+    while(button3 == false){
+        if(button1_right % 3 == 0 && button1_right % 2 != 0){
+            lcd.printf("Scene 2C");
+        }
+        else{
+            if(button1_right % 2 == 0){
+                lcd.printf("Scene 2B");
+            }
+            if(button1_right !=0){
+                lcd.printf("Scene 2A");
+            }
+        }
+    }
+
+}
 
 
  
@@ -134,6 +118,7 @@ int main()
 
         button1right_counter();
         button2left_counter();
+        buttonconfirm(button1_right);
 
         while(button1 == false){
             printf("Right button count: %d\n", button1_right);
@@ -146,6 +131,8 @@ int main()
         }
         
 
+        lcd.locate(0,0);
+        lcd.printf("Scene 1");
         lcd.locate(0,1);
         lcd.printf("%c",choice1);
         lcd.locate(3,1);
