@@ -99,7 +99,7 @@ protected:
     void writeByte(int value);
     void writeCommand(int command);
     void writeData(int data);
-    void Scroll(char const *text);
+
 
     DigitalOut _rs, _e;
     BusOut _d;
