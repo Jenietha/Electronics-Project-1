@@ -88,6 +88,9 @@ public:
     int rows();
     int columns();
 
+    void writeData(int data);
+    void writeCommand(int command);
+
 protected:
 
     // Stream implementation functions
@@ -97,8 +100,8 @@ protected:
     int address(int column, int row);
     void character(int column, int row, int c);
     void writeByte(int value);
-    void writeCommand(int command);
-    void writeData(int data);
+    //void writeCommand(int command);
+    //void writeData(int data);
 
 
     DigitalOut _rs, _e;

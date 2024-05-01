@@ -28,11 +28,11 @@ int button1_right = 1;
 int button2_left = 0;
 //int cursorposition = 0;
 
-const char choice1 = 'a';
-const char choice2 = 'b';
-const char choice3 = 'c';
+int choice1 = 0x7F;
+int choice2 = 0x7E;
+int choice3 = 0x25;
 
-char inventory[3] = {"Knife", "Plank", "Stick", "Armor"};
+//char inventory[3] = {"Knife", "Plank", "Stick", "Armor"};
 
 int button1right_counter(){
     if(buttonright == false){
@@ -52,7 +52,50 @@ int button2left_counter(){
     return button1 - button2;
 }*/
 
+//character for player's health
+char health[8] ={ 0x00,
+                  0x0A,
+                  0x1F,
+                  0x1F,
+                  0x1F,
+                  0x0E,
+                  0x04,
+                  0x00
 
+};
+
+//character for player's speed and action icon for run/dodge
+char speed[8] = { 0x00,
+                  0x07,
+                  0x0F,
+                  0x1E,
+                  0x1C,
+                  0x0E,
+                  0x00,
+                  0x00
+};
+
+//character for player's defence and action icon for defending
+char defence[8] = { 0x00,
+                    0x1F,   
+                    0x1F,
+                    0x1F,
+                    0x0E,
+                    0x04,
+                    0x00,
+                    0x00
+
+};
+
+//character for player's power and action icon for attack
+char power[8] = { 0x04,
+                  0x0E,
+                  0x0E,
+                  0x0E,
+                  0x0E,
+                  0x1F,
+                  0x04,
+                  0x04};
 
 
 
@@ -74,11 +117,11 @@ void Scroll(char const *text){
 }
 
 //Function to blink characters - to show they are selected
-void blinktext(const char text1, const char text2, const char text3){
+void blinktext(int option1, int option2, int option3){
 
     if (abs(button1_right-button2_left) % 3 == 0 && abs(button1_right-button2_left) % 2 != 0){
         lcd.locate(6,1);
-        lcd.printf("%c",text3);
+        lcd.putc(option3);
         thread_sleep_for(500);
         lcd.locate(6,1);
         lcd.printf(" ");
@@ -87,7 +130,7 @@ void blinktext(const char text1, const char text2, const char text3){
     else{
         if(abs(button1_right-button2_left) % 2 == 0){
             lcd.locate(3,1);
-            lcd.printf("%c",text2);
+            lcd.putc(option2);
             thread_sleep_for(500);
             lcd.locate(3,1);
             lcd.printf(" ");
@@ -95,7 +138,7 @@ void blinktext(const char text1, const char text2, const char text3){
         }
         else{
             lcd.locate(0,1);
-            lcd.printf("%c", text1);
+            lcd.putc(option1);
             thread_sleep_for(500);
             lcd.locate(0,1);
             lcd.printf(" ");
@@ -104,7 +147,7 @@ void blinktext(const char text1, const char text2, const char text3){
     }
 }
 
-void showInventory(){
+/*void showInventory(){
     if(buttonInventory == false){
         for(int i = 0; i<4; i=i+2){
             lcd.cls();
@@ -115,7 +158,7 @@ void showInventory(){
             thread_sleep_for(2000);
         }
     }
-}
+}*/
 
 void button3Fn(){
     button3Semaphore.release();
@@ -147,9 +190,48 @@ void button3Fn(){
 
 }*/
 
+
 int main() 
 {
-    Scroll("Very long scene description");
+    //Scroll("Very long scene description");
+
+    lcd.writeCommand(0x40);
+
+    for(int i=0;i<8;i++){
+        lcd.writeData(health[i]);
+    }
+
+    lcd.locate(12,1);
+    lcd.putc(0);
+
+    lcd.writeCommand(0x40 +8);
+
+    for(int i=0; i<8; i++){
+        lcd.writeData(speed[i]);
+    }
+
+    lcd.locate(13,1);
+    lcd.putc(1);
+
+    lcd.writeCommand(0x40 +16);
+
+    for (int i=0; i<8; i++){
+        lcd.writeData(defence[i]);
+    }
+
+    lcd.locate(14,1);
+    lcd.putc(2);
+
+    lcd.writeCommand(0x40 +24);
+
+    for(int i=0; i<8; i++){
+        lcd.writeData(power[i]);
+    }
+
+    lcd.locate(15,1);
+    lcd.putc(3);
+
+
 
     while(true){
 
@@ -175,11 +257,14 @@ int main()
         lcd.locate(0,0);
         //Scroll("Very long scene description");
         lcd.locate(0,1);
-        lcd.printf("%c",choice1);
+        //lcd.printf("%c",choice1);
+        lcd.putc(choice1);
         lcd.locate(3,1);
-        lcd.printf("%c",choice2);
+        //lcd.printf("%c",choice2);
+        lcd.putc(choice2);
         lcd.locate(6,1);
-        lcd.printf("%c",choice3);
+        //lcd.printf("%c",choice3);
+        lcd.putc(choice3);
 
         blinktext(choice1, choice2, choice3);
 
