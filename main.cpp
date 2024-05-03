@@ -32,6 +32,8 @@ int choice1 = 0x7F;
 int choice2 = 0x7E;
 int choice3 = 0x25;
 
+int healthvalue=40;
+
 //char inventory[3] = {"Knife", "Plank", "Stick", "Armor"};
 
 int button1right_counter(){
@@ -53,7 +55,7 @@ int button2left_counter(){
 }*/
 
 //character for player's health
-char health[8] ={ 0x00,
+char healthicon[8] ={ 0x00,
                   0x0A,
                   0x1F,
                   0x1F,
@@ -64,8 +66,12 @@ char health[8] ={ 0x00,
 
 };
 
+char healthlevel[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+
+};
+
 //character for player's speed and action icon for run/dodge
-char speed[8] = { 0x00,
+char speedicon[8] = { 0x00,
                   0x07,
                   0x0F,
                   0x1E,
@@ -75,8 +81,12 @@ char speed[8] = { 0x00,
                   0x00
 };
 
+char speedlevel[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+
+};
+
 //character for player's defence and action icon for defending
-char defence[8] = { 0x00,
+char defenceicon[8] = { 0x00,
                     0x1F,   
                     0x1F,
                     0x1F,
@@ -86,9 +96,12 @@ char defence[8] = { 0x00,
                     0x00
 
 };
+char defencelevel[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+
+};
 
 //character for player's power and action icon for attack
-char power[8] = { 0x04,
+char powericon[8] = { 0x04,
                   0x0E,
                   0x0E,
                   0x0E,
@@ -97,7 +110,9 @@ char power[8] = { 0x04,
                   0x04,
                   0x04};
 
+char powerlevel[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
 
+};
 
 //Functions to scroll text
 void showletters(int printStart, int startLetter, char const *text){
@@ -198,38 +213,78 @@ int main()
     lcd.writeCommand(0x40);
 
     for(int i=0;i<8;i++){
-        lcd.writeData(health[i]);
+        lcd.writeData(healthicon[i]);
     }
 
-    lcd.locate(12,1);
+    lcd.locate(8,1);
     lcd.putc(0);
 
-    lcd.writeCommand(0x40 +8);
+    lcd.writeCommand(0x40+8);
 
-    for(int i=0; i<8; i++){
-        lcd.writeData(speed[i]);
+    for (int u=0; u<8; ++u){
+        healthlevel[u]=0x00;
+        lcd.writeData(healthlevel[u]);
     }
 
-    lcd.locate(13,1);
+    lcd.writeCommand(0x40+8);
+    for (int u=0; u<healthvalue+1 && healthvalue<=40; ++u){
+        int row = 7-((u-1)/5);
+        int col = 4-((u-1)%5);
+        healthlevel[row] += 1<<col;
+    }
+    lcd.writeCommand(0x40+8);
+    for (int u=0; u<8; ++u){
+        lcd.writeData(healthlevel[u]);
+    }
+
+
+    lcd.locate(9,1);
     lcd.putc(1);
+
+    lcd.writeCommand(0x40+16);
+
+    for (int u=0; u<8; ++u){
+        speedlevel[u]=0x00;
+        lcd.writeData(healthlevel[u]);
+    }
+
+    lcd.writeCommand(0x40+8);
+    for (int u=0; u<speedvalue+1 && speedvalue<=40; ++u){
+        int row = 7-((u-1)/5);
+        int col = 4-((u-1)%5);
+        healthlevel[row] += 1<<col;
+    }
+    lcd.writeCommand(0x40+8);
+    for (int u=0; u<8; ++u){
+        lcd.writeData(healthlevel[u]);
+    }
 
     lcd.writeCommand(0x40 +16);
 
-    for (int i=0; i<8; i++){
-        lcd.writeData(defence[i]);
+    for(int i=0; i<8; i++){
+        lcd.writeData(speedicon[i]);
     }
 
-    lcd.locate(14,1);
+    lcd.locate(10,1);
     lcd.putc(2);
+
+    /*lcd.writeCommand(0x40 +32);
+
+    for (int i=0; i<8; i++){
+        lcd.writeData(defenceicon[i]);
+    }
+
+    lcd.locate(12,1);
+    lcd.putc(4);
 
     lcd.writeCommand(0x40 +24);
 
     for(int i=0; i<8; i++){
-        lcd.writeData(power[i]);
+        lcd.writeData(powericon[i]);
     }
 
     lcd.locate(15,1);
-    lcd.putc(3);
+    lcd.putc(3);*/
 
 
 
