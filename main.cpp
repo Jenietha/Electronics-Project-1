@@ -324,23 +324,23 @@ int main()
     lcd.writeCommand(0x40+56);
 
     for (int u=0; u<8; ++u){
-        defencelevel[u]=0x00;
-        lcd.writeData(defencelevel[u]);
+        powerlevel[u]=0x00;
+        lcd.writeData(powerlevel[u]);
     }
 
-    lcd.writeCommand(0x40+40);
-    for (int u=0; u<defencevalue+1 && defencevalue<=40; ++u){
+    lcd.writeCommand(0x40+56);
+    for (int u=0; u<powervalue+1 && powervalue<=40; ++u){
         int row = 7-((u-1)/5);
         int col = 4-((u-1)%5);
-        defencelevel[row] += 1<<col;
+        powerlevel[row] += 1<<col;
     }
-    lcd.writeCommand(0x40+40);
+    lcd.writeCommand(0x40+56);
     for (int u=0; u<8; ++u){
-        lcd.writeData(defencelevel[u]);
+        lcd.writeData(powerlevel[u]);
     }
 
-    lcd.locate(13,1);
-    lcd.putc(5);
+    lcd.locate(15,1);
+    lcd.putc(7);
 
     
 
@@ -387,15 +387,15 @@ int main()
         button2left_counter();
         //showInventory();
 
-        lcd.locate(0,0);
+        //lcd.locate(0,0);
         //Scroll("Very long scene description");
         lcd.locate(0,1);
         //lcd.printf("%c",choice1);
         lcd.putc(choice1);
-        lcd.locate(3,1);
+        lcd.locate(2,1);
         //lcd.printf("%c",choice2);
         lcd.putc(choice2);
-        lcd.locate(6,1);
+        lcd.locate(4,1);
         //lcd.printf("%c",choice3);
         lcd.putc(choice3);
 
