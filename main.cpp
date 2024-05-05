@@ -33,6 +33,9 @@ int choice2 = 0x7E;
 int choice3 = 0x25;
 
 int healthvalue=40;
+int speedvalue=40;
+int defencevalue=40;
+int powervalue=40;
 
 //char inventory[3] = {"Knife", "Plank", "Stick", "Armor"};
 
@@ -210,6 +213,7 @@ int main()
 {
     //Scroll("Very long scene description");
 
+    //Health icon
     lcd.writeCommand(0x40);
 
     for(int i=0;i<8;i++){
@@ -219,6 +223,7 @@ int main()
     lcd.locate(8,1);
     lcd.putc(0);
 
+    //health data
     lcd.writeCommand(0x40+8);
 
     for (int u=0; u<8; ++u){
@@ -241,24 +246,7 @@ int main()
     lcd.locate(9,1);
     lcd.putc(1);
 
-    lcd.writeCommand(0x40+16);
-
-    for (int u=0; u<8; ++u){
-        speedlevel[u]=0x00;
-        lcd.writeData(healthlevel[u]);
-    }
-
-    lcd.writeCommand(0x40+8);
-    for (int u=0; u<speedvalue+1 && speedvalue<=40; ++u){
-        int row = 7-((u-1)/5);
-        int col = 4-((u-1)%5);
-        healthlevel[row] += 1<<col;
-    }
-    lcd.writeCommand(0x40+8);
-    for (int u=0; u<8; ++u){
-        lcd.writeData(healthlevel[u]);
-    }
-
+    //Speed icon
     lcd.writeCommand(0x40 +16);
 
     for(int i=0; i<8; i++){
@@ -267,6 +255,96 @@ int main()
 
     lcd.locate(10,1);
     lcd.putc(2);
+
+
+    lcd.writeCommand(0x40+24);
+
+    for (int u=0; u<8; ++u){
+        speedlevel[u]=0x00;
+        lcd.writeData(speedlevel[u]);
+    }
+
+    lcd.writeCommand(0x40+24);
+    for (int u=0; u<speedvalue+1 && speedvalue<=40; ++u){
+        int row = 7-((u-1)/5);
+        int col = 4-((u-1)%5);
+        speedlevel[row] += 1<<col;
+    }
+    lcd.writeCommand(0x40+24);
+    for (int u=0; u<8; ++u){
+        lcd.writeData(speedlevel[u]);
+    }
+
+    lcd.locate(11,1);
+    lcd.putc(3);
+
+    //Defence icon
+    lcd.writeCommand(0x40 +32);
+
+    for (int i=0; i<8; i++){
+        lcd.writeData(defenceicon[i]);
+    }
+
+    lcd.locate(12,1);
+    lcd.putc(4);
+
+    //Defence data
+    lcd.writeCommand(0x40+40);
+
+    for (int u=0; u<8; ++u){
+        defencelevel[u]=0x00;
+        lcd.writeData(defencelevel[u]);
+    }
+
+    lcd.writeCommand(0x40+40);
+    for (int u=0; u<defencevalue+1 && defencevalue<=40; ++u){
+        int row = 7-((u-1)/5);
+        int col = 4-((u-1)%5);
+        defencelevel[row] += 1<<col;
+    }
+    lcd.writeCommand(0x40+40);
+    for (int u=0; u<8; ++u){
+        lcd.writeData(defencelevel[u]);
+    }
+
+    lcd.locate(13,1);
+    lcd.putc(5);
+
+    //Power icon
+    lcd.writeCommand(0x40 +48);
+
+    for(int i=0; i<8; i++){
+        lcd.writeData(powericon[i]);
+    }
+
+    lcd.locate(14,1);
+    lcd.putc(6);
+
+    //Power data
+    lcd.writeCommand(0x40+56);
+
+    for (int u=0; u<8; ++u){
+        defencelevel[u]=0x00;
+        lcd.writeData(defencelevel[u]);
+    }
+
+    lcd.writeCommand(0x40+40);
+    for (int u=0; u<defencevalue+1 && defencevalue<=40; ++u){
+        int row = 7-((u-1)/5);
+        int col = 4-((u-1)%5);
+        defencelevel[row] += 1<<col;
+    }
+    lcd.writeCommand(0x40+40);
+    for (int u=0; u<8; ++u){
+        lcd.writeData(defencelevel[u]);
+    }
+
+    lcd.locate(13,1);
+    lcd.putc(5);
+
+    
+
+    
 
     /*lcd.writeCommand(0x40 +32);
 
