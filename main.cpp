@@ -11,6 +11,7 @@ Version 3
 #include "mbed.h"
 #include "TextLCD.h"
 #include "string.h"
+#include <string>
 
 
 DigitalIn buttonright(D8, PullUp);
@@ -26,18 +27,17 @@ TextLCD lcd(D0, D1, D2, D3, D4, D5, TextLCD::LCD16x2); // Connect these nucleo p
 
 int button1_right = 1;
 int button2_left = 0;
-//int cursorposition = 0;
 
-int choice1 = 0x7F;
-int choice2 = 0x7E;
-int choice3 = 0x25;
 
-int healthvalue=40;
-int speedvalue=40;
-int defencevalue=40;
-int powervalue=40;
+int exploreoptions[4] = {0x46, 0x42 ,0x7E, 0x7F}; //actions during an exploration scene
+int battleoptions[3] = {1,2,3}; //actions during a battle scene
 
-//char inventory[3] = {"Knife", "Plank", "Stick", "Armor"};
+int healthvalue=40; //initial value for player's health
+int speedvalue=40; //initial value for player's speed
+int defencevalue=40; //initial value for player's defensive strength
+int powervalue=40; //initial value for player's offensive strength
+
+char * inventory[4] = {'Knife', 'Plank', 'Stick', 'Armor'}; //declare each string separately, get pointer of first character of each string and add that to array
 
 int button1right_counter(){
     if(buttonright == false){
@@ -53,69 +53,29 @@ int button2left_counter(){
     return button2_left;
 }
 
-/*int buttontotalcounter(){
-    return button1 - button2;
-}*/
-
 //character for player's health
-char healthicon[8] ={ 0x00,
-                  0x0A,
-                  0x1F,
-                  0x1F,
-                  0x1F,
-                  0x0E,
-                  0x04,
-                  0x00
+char healthicon[8] ={ 0x00, 0x0A, 0x1F, 0x1F, 0x1F, 0x0E, 0x04, 0x00};
 
-};
-
-char healthlevel[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
-
-};
+//character for player's health value
+char healthlevel[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
 //character for player's speed and action icon for run/dodge
-char speedicon[8] = { 0x00,
-                  0x07,
-                  0x0F,
-                  0x1E,
-                  0x1C,
-                  0x0E,
-                  0x00,
-                  0x00
-};
+char speedicon[8] = { 0x00, 0x07, 0x0F, 0x1E, 0x1C, 0x0E, 0x00,0x00};
 
-char speedlevel[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
-
-};
+//character for player's speed value
+char speedlevel[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
 //character for player's defence and action icon for defending
-char defenceicon[8] = { 0x00,
-                    0x1F,   
-                    0x1F,
-                    0x1F,
-                    0x0E,
-                    0x04,
-                    0x00,
-                    0x00
+char defenceicon[8] = { 0x00, 0x1F, 0x1F, 0x1F, 0x0E, 0x04, 0x00, 0x00};
 
-};
-char defencelevel[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
-
-};
+//character for player's defensive strength value
+char defencelevel[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
 //character for player's power and action icon for attack
-char powericon[8] = { 0x04,
-                  0x0E,
-                  0x0E,
-                  0x0E,
-                  0x0E,
-                  0x1F,
-                  0x04,
-                  0x04};
+char powericon[8] = { 0x04, 0x0E, 0x0E, 0x0E, 0x0E, 0x1F, 0x04, 0x04};
 
-char powerlevel[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
-
-};
+//character for player's power value
+char powerlevel[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
 //Functions to scroll text
 void showletters(int printStart, int startLetter, char const *text){
@@ -137,20 +97,29 @@ void Scroll(char const *text){
 //Function to blink characters - to show they are selected
 void blinktext(int option1, int option2, int option3){
 
-    if (abs(button1_right-button2_left) % 3 == 0 && abs(button1_right-button2_left) % 2 != 0){
+    if(abs(button1_right-button2_left)%4 == 0 ){
         lcd.locate(6,1);
-        lcd.putc(option3);
+        lcd.printf("i");
         thread_sleep_for(500);
         lcd.locate(6,1);
         lcd.printf(" ");
         thread_sleep_for(500);
     }
+
+    else if (abs(button1_right-button2_left) % 3 == 0 && abs(button1_right-button2_left) % 2 != 0){
+        lcd.locate(4,1);
+        lcd.putc(option3);
+        thread_sleep_for(500);
+        lcd.locate(4,1);
+        lcd.printf(" ");
+        thread_sleep_for(500);
+    }
     else{
         if(abs(button1_right-button2_left) % 2 == 0){
-            lcd.locate(3,1);
+            lcd.locate(2,1);
             lcd.putc(option2);
             thread_sleep_for(500);
-            lcd.locate(3,1);
+            lcd.locate(2,1);
             lcd.printf(" ");
             thread_sleep_for(500);
         }
@@ -178,35 +147,38 @@ void blinktext(int option1, int option2, int option3){
     }
 }*/
 
+void showInventory(){
+    if (abs(button1_right-button2_left) % 4 == 0 && buttonInventory == false){
+        lcd.cls();
+        lcd.locate(0,0);
+        lcd.printf(inventory[0]);
+        lcd.locate(0,1);
+        lcd.printf("Items");
+        sleep();
+
+    } 
+}
+
 void button3Fn(){
     button3Semaphore.release();
 }
 
-/*void button3ThreadFn(){
-    
-    while (true){
-        button3Semaphore.acquire();
-        if (button1_right % 3 == 0 && button1_right % 2 != 0){
-            lcd.cls();
-            lcd.locate(0,0);
-            lcd.printf("Scene 2C");
-         
-        }
-        else{
-            if(button1_right % 2 == 0){
-                lcd.cls();
-                lcd.locate(0,0);
-                lcd.printf("Scene 2B");
-        }
-            else{
-                lcd.cls();
-                lcd.locate(0,0);
-                lcd.printf("Scene 2A");
-            }
-        }
-}
+void mainscreen(){
+    lcd.locate(0,1);
+    lcd.putc(exploreoptions[1]);
 
-}*/
+    lcd.locate(2,1);
+    lcd.putc(exploreoptions[2]);
+
+    lcd.locate(4,1);
+    lcd.putc(exploreoptions[3]);
+
+    lcd.locate(6,1);
+    lcd.printf("i");
+
+    blinktext(exploreoptions[1], exploreoptions[2], exploreoptions[3]);
+    
+}
 
 
 int main() 
@@ -342,66 +314,21 @@ int main()
     lcd.locate(15,1);
     lcd.putc(7);
 
-    
-
-    
-
-    /*lcd.writeCommand(0x40 +32);
-
-    for (int i=0; i<8; i++){
-        lcd.writeData(defenceicon[i]);
-    }
-
-    lcd.locate(12,1);
-    lcd.putc(4);
-
-    lcd.writeCommand(0x40 +24);
-
-    for(int i=0; i<8; i++){
-        lcd.writeData(powericon[i]);
-    }
-
-    lcd.locate(15,1);
-    lcd.putc(3);*/
-
+    lcd.locate(0,0);
+    Scroll("Very long scene description");
 
 
     while(true){
-
-        //buttonconfirm(button1_right);
-
-        /*while(button1 == false){
-            printf("Right button count: %d\n", button1_right);
-            thread_sleep_for(1000);
-        }
-
-        while(button2 == false){
-            printf("Left button count: %d\n", button2_left);
-            thread_sleep_for(1000);
-        }*/
-
-        //button3Thread.start(button3Fn);
-        //button3.fall(button3ThreadFn);
 
         button1right_counter();
         button2left_counter();
         //showInventory();
 
-        //lcd.locate(0,0);
-        //Scroll("Very long scene description");
-        lcd.locate(0,1);
-        //lcd.printf("%c",choice1);
-        lcd.putc(choice1);
-        lcd.locate(2,1);
-        //lcd.printf("%c",choice2);
-        lcd.putc(choice2);
-        lcd.locate(4,1);
-        //lcd.printf("%c",choice3);
-        lcd.putc(choice3);
-
-        blinktext(choice1, choice2, choice3);
+        mainscreen();
 
         
+
+        showInventory();
 
         sleep();
 
