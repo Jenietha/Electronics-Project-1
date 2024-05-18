@@ -28,16 +28,28 @@ TextLCD lcd(D0, D1, D2, D3, D4, D5, TextLCD::LCD16x2); // Connect these nucleo p
 int button1_right = 1;
 int button2_left = 0;
 
+int customcharStartAddress = 0x40;
+int customcharAddressIncrement = 8;
 
-int exploreoptions[4] = {0x46, 0x42 ,0x7E, 0x7F}; //actions during an exploration scene
+int scrolltime = 500;
+int lcdcooldowntime = 50;
+int blinkonoff = 500;
+
+
+int exploreoptions[4] = {0x46, 0x42 ,0x4C, 0x52}; //actions during an exploration scene
 int battleoptions[3] = {1,2,3}; //actions during a battle scene
 
-int healthvalue=40; //initial value for player's health
+int healthvalue=20; //initial value for player's health
 int speedvalue=40; //initial value for player's speed
 int defencevalue=40; //initial value for player's defensive strength
 int powervalue=40; //initial value for player's offensive strength
 
-char * inventory[4] = {'Knife', 'Plank', 'Stick', 'Armor'}; //declare each string separately, get pointer of first character of each string and add that to array
+int healthmaxvalue = 40;
+int speedmaxvalue = 40;
+int defencemaxvalue = 40;
+int powermaxvalue = 40;
+
+//char * inventory[4] = {'Knife', 'Plank', 'Stick', 'Armor'}; //declare each string separately, get pointer of first character of each string and add that to array
 
 int button1right_counter(){
     if(buttonright == false){
@@ -84,13 +96,13 @@ void showletters(int printStart, int startLetter, char const *text){
         lcd.printf("%c", text[letter]);
     }
     lcd.printf(" ");
-    thread_sleep_for(50);
+    thread_sleep_for(lcdcooldowntime);
 }
 
 void Scroll(char const *text){
     for (int letter = 0; letter<= strlen(text)-16; ++letter){
         showletters(0,letter, text);
-        thread_sleep_for(500);
+        thread_sleep_for(scrolltime);
     }
 }
 
@@ -100,7 +112,7 @@ void blinktext(int option1, int option2, int option3){
     if(abs(button1_right-button2_left)%4 == 0 ){
         lcd.locate(6,1);
         lcd.printf("i");
-        thread_sleep_for(500);
+        thread_sleep_for(blinkonoff);
         lcd.locate(6,1);
         lcd.printf(" ");
         thread_sleep_for(500);
@@ -147,7 +159,7 @@ void blinktext(int option1, int option2, int option3){
     }
 }*/
 
-void showInventory(){
+/*void showInventory(){
     if (abs(button1_right-button2_left) % 4 == 0 && buttonInventory == false){
         lcd.cls();
         lcd.locate(0,0);
@@ -157,7 +169,7 @@ void showInventory(){
         sleep();
 
     } 
-}
+}*/
 
 void button3Fn(){
     button3Semaphore.release();
@@ -165,7 +177,7 @@ void button3Fn(){
 
 void mainscreen(){
     lcd.locate(0,1);
-    lcd.putc(exploreoptions[1]);
+    lcd.putc(exploreoptions[0]);
 
     lcd.locate(2,1);
     lcd.putc(exploreoptions[2]);
@@ -176,7 +188,7 @@ void mainscreen(){
     lcd.locate(6,1);
     lcd.printf("i");
 
-    blinktext(exploreoptions[1], exploreoptions[2], exploreoptions[3]);
+    blinktext(exploreoptions[0], exploreoptions[2], exploreoptions[3]);
     
 }
 
@@ -186,9 +198,9 @@ int main()
     //Scroll("Very long scene description");
 
     //Health icon
-    lcd.writeCommand(0x40);
+    lcd.writeCommand(customcharStartAddress);
 
-    for(int i=0;i<8;i++){
+    for(int i = 0;i < 8;i++){
         lcd.writeData(healthicon[i]);
     }
 
@@ -196,20 +208,20 @@ int main()
     lcd.putc(0);
 
     //health data
-    lcd.writeCommand(0x40+8);
+    lcd.writeCommand(customcharStartAddress + customcharAddressIncrement);
 
-    for (int u=0; u<8; ++u){
+    for (int u = 0; u < 8; ++u){
         healthlevel[u]=0x00;
         lcd.writeData(healthlevel[u]);
     }
 
-    lcd.writeCommand(0x40+8);
-    for (int u=0; u<healthvalue+1 && healthvalue<=40; ++u){
+    lcd.writeCommand(customcharStartAddress + customcharAddressIncrement);
+    for (int u=0; u<healthvalue+1 && healthvalue <= healthmaxvalue; ++u){
         int row = 7-((u-1)/5);
         int col = 4-((u-1)%5);
         healthlevel[row] += 1<<col;
     }
-    lcd.writeCommand(0x40+8);
+    lcd.writeCommand(customcharStartAddress + customcharAddressIncrement);
     for (int u=0; u<8; ++u){
         lcd.writeData(healthlevel[u]);
     }
@@ -219,7 +231,7 @@ int main()
     lcd.putc(1);
 
     //Speed icon
-    lcd.writeCommand(0x40 +16);
+    lcd.writeCommand(customcharStartAddress + 2*(customcharAddressIncrement));
 
     for(int i=0; i<8; i++){
         lcd.writeData(speedicon[i]);
@@ -229,20 +241,20 @@ int main()
     lcd.putc(2);
 
 
-    lcd.writeCommand(0x40+24);
+    lcd.writeCommand(customcharStartAddress + 3*(customcharAddressIncrement));
 
     for (int u=0; u<8; ++u){
         speedlevel[u]=0x00;
         lcd.writeData(speedlevel[u]);
     }
 
-    lcd.writeCommand(0x40+24);
-    for (int u=0; u<speedvalue+1 && speedvalue<=40; ++u){
+    lcd.writeCommand(customcharStartAddress + 3*(customcharAddressIncrement));
+    for (int u=0; u<speedvalue+1 && speedvalue <= speedmaxvalue; ++u){
         int row = 7-((u-1)/5);
         int col = 4-((u-1)%5);
         speedlevel[row] += 1<<col;
     }
-    lcd.writeCommand(0x40+24);
+    lcd.writeCommand(customcharStartAddress + 3*(customcharAddressIncrement));
     for (int u=0; u<8; ++u){
         lcd.writeData(speedlevel[u]);
     }
@@ -251,7 +263,7 @@ int main()
     lcd.putc(3);
 
     //Defence icon
-    lcd.writeCommand(0x40 +32);
+    lcd.writeCommand(customcharStartAddress + 4*(customcharAddressIncrement));
 
     for (int i=0; i<8; i++){
         lcd.writeData(defenceicon[i]);
@@ -261,20 +273,20 @@ int main()
     lcd.putc(4);
 
     //Defence data
-    lcd.writeCommand(0x40+40);
+    lcd.writeCommand(customcharStartAddress + 5*(customcharAddressIncrement));
 
     for (int u=0; u<8; ++u){
         defencelevel[u]=0x00;
         lcd.writeData(defencelevel[u]);
     }
 
-    lcd.writeCommand(0x40+40);
-    for (int u=0; u<defencevalue+1 && defencevalue<=40; ++u){
+    lcd.writeCommand(customcharStartAddress + 5*(customcharAddressIncrement));
+    for (int u=0; u<defencevalue+1 && defencevalue<=defencemaxvalue; ++u){
         int row = 7-((u-1)/5);
         int col = 4-((u-1)%5);
         defencelevel[row] += 1<<col;
     }
-    lcd.writeCommand(0x40+40);
+    lcd.writeCommand(customcharStartAddress + 5*(customcharAddressIncrement));
     for (int u=0; u<8; ++u){
         lcd.writeData(defencelevel[u]);
     }
@@ -283,9 +295,9 @@ int main()
     lcd.putc(5);
 
     //Power icon
-    lcd.writeCommand(0x40 +48);
+    lcd.writeCommand(customcharStartAddress + 6*(customcharAddressIncrement));
 
-    for(int i=0; i<8; i++){
+    for(int i = 0; i < 8; i++){
         lcd.writeData(powericon[i]);
     }
 
@@ -293,20 +305,20 @@ int main()
     lcd.putc(6);
 
     //Power data
-    lcd.writeCommand(0x40+56);
+    lcd.writeCommand(customcharStartAddress + 7*(customcharAddressIncrement));
 
-    for (int u=0; u<8; ++u){
+    for (int u = 0; u < 8; ++u){
         powerlevel[u]=0x00;
         lcd.writeData(powerlevel[u]);
     }
 
-    lcd.writeCommand(0x40+56);
-    for (int u=0; u<powervalue+1 && powervalue<=40; ++u){
+    lcd.writeCommand(customcharStartAddress + 7*(customcharAddressIncrement));
+    for (int u = 0; u < powervalue+1 && powervalue <= powermaxvalue; ++u){
         int row = 7-((u-1)/5);
         int col = 4-((u-1)%5);
         powerlevel[row] += 1<<col;
     }
-    lcd.writeCommand(0x40+56);
+    lcd.writeCommand(customcharStartAddress + 7*(customcharAddressIncrement));
     for (int u=0; u<8; ++u){
         lcd.writeData(powerlevel[u]);
     }
@@ -328,7 +340,7 @@ int main()
 
         
 
-        showInventory();
+        //showInventory();
 
         sleep();
 
