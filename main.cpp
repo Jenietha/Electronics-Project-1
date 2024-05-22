@@ -58,6 +58,26 @@ string greencrystal = "Green Crystal";
 string redcrystal = "Red Crystal";
 string bluecrystal = "Blue Crystal";
 
+int * knifepointer = &knife;
+int * lizarddaggerpointer = &lizarddagger;
+int * lizardknifepointer = &lizardknife;
+int * stickpointer = &stick;
+int * wolfpawpointer = &wolfpaw;
+int * wolfskinpointer = &wolfskin;
+int * skeletonbladepointer = &skeletonblade;
+int * hammerpointer = &hammer;
+int * stoneglovespointer = &stonegloves;
+int * stonearmourpointer = &stonearmour;
+int * flamingswordpointer = &flamingsword;
+int * breakerhammerpointer = &breakerhammer;
+int * armouredlizardskinpointer = &armouredlizardskin;
+int * flowingarmourpointer = &flowingarmour;
+int * woodenboardpointer = &woodenboard;
+int * greencrystalpointer = &greencrystal;
+int * redcrystalpointer = &redcrystal;
+int * bluecrystalpointer = &bluecrystal;
+
+
 char inventory[14] = {};
 
 int healthvalue=20; //initial value for player's health
@@ -182,14 +202,15 @@ void blinktext(int option1, int option2, int option3){
 
 void showInventory(){
     //if (abs(button1_right-button2_left) % 4 == 0 && buttonInventory == false){
-        lcd.cls();
+        //lcd.cls();
         
         lcd.locate(0,0);
         lcd.printf("Knife");
-        lcd.locate(0,1);
-        lcd.printf("Lizard Dagger");
         lcd.locate(15,0);
         lcd.putc(0x7F);
+        lcd.locate(0,1);
+        lcd.printf("Lizard Dagger");
+        
 
         //lcd.locate(0,1);
         //lcd.printf("Items");
@@ -250,8 +271,6 @@ void mainscreen(){
 
 int main() 
 {
-    //Scroll("Very long scene description");
-
     //Health icon
     lcd.writeCommand(customcharStartAddress);
 
@@ -259,8 +278,6 @@ int main()
         lcd.writeData(healthicon[i]);
     }
 
-    //lcd.locate(8,1);
-    //lcd.putc(0);
 
     //health data
     lcd.writeCommand(customcharStartAddress + customcharAddressIncrement);
@@ -282,9 +299,6 @@ int main()
     }
 
 
-    //lcd.locate(9,1);
-    //lcd.putc(1);
-
     //Speed icon
     lcd.writeCommand(customcharStartAddress + 2*(customcharAddressIncrement));
 
@@ -292,8 +306,6 @@ int main()
         lcd.writeData(speedicon[i]);
     }
 
-    //lcd.locate(10,1);
-    //lcd.putc(2);
 
 
     lcd.writeCommand(customcharStartAddress + 3*(customcharAddressIncrement));
@@ -314,8 +326,6 @@ int main()
         lcd.writeData(speedlevel[u]);
     }
 
-    //lcd.locate(11,1);
-    //lcd.putc(3);
 
     //Defence icon
     lcd.writeCommand(customcharStartAddress + 4*(customcharAddressIncrement));
@@ -324,8 +334,6 @@ int main()
         lcd.writeData(defenceicon[i]);
     }
 
-    //lcd.locate(12,1);
-    //lcd.putc(4);
 
     //Defence data
     lcd.writeCommand(customcharStartAddress + 5*(customcharAddressIncrement));
@@ -346,8 +354,6 @@ int main()
         lcd.writeData(defencelevel[u]);
     }
 
-    //lcd.locate(13,1);
-    //lcd.putc(5);
 
     //Power icon
     lcd.writeCommand(customcharStartAddress + 6*(customcharAddressIncrement));
@@ -356,8 +362,6 @@ int main()
         lcd.writeData(powericon[i]);
     }
 
-    //lcd.locate(14,1);
-    //lcd.putc(6);
 
     //Power data
     lcd.writeCommand(customcharStartAddress + 7*(customcharAddressIncrement));
@@ -378,18 +382,11 @@ int main()
         lcd.writeData(powerlevel[u]);
     }
 
-    //lcd.locate(15,1);
-    //lcd.putc(7);
-
-    //lcd.locate(0,0);
-    //Scroll("Very long scene description");
-
 
     while(true){
 
         button1right_counter();
         button2left_counter();
-        //showInventory();
 
         //mainscreen();
 
