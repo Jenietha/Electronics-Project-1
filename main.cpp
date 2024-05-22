@@ -37,7 +37,28 @@ int blinkonoff = 500;
 
 
 int exploreoptions[4] = {0x46, 0x42 ,0x4C, 0x52}; //actions during an exploration scene
-int battleoptions[3] = {1,2,3}; //actions during a battle scene
+int battleoptions[4] = {1,2,3,0x25}; //actions during a battle scene
+
+string knife = "Knife";
+string lizarddagger = "Lizard Dagger";
+string lizardknife = "Lizard Knife";
+string stick = "Wooden Stick";
+string wolfpaw = "Wolf Paw";
+string wolfskin = "Wolf Skin";
+string skeletonblade = "Skeleton Blade";
+string hammer = "Hammer";
+string stonegloves = "Stone Gloves";
+string stonearmour = "Stone Armour";
+string flamingsword = "Flaming Sword";
+string breakerhammer = "Breaker Hammer";
+string armouredlizardskin = "Ar.Lizard Skin";
+string flowingarmour = "Flowing Armour";
+string woodenboard = "Wooden Board";
+string greencrystal = "Green Crystal";
+string redcrystal = "Red Crystal";
+string bluecrystal = "Blue Crystal";
+
+char inventory[14] = {};
 
 int healthvalue=20; //initial value for player's health
 int speedvalue=40; //initial value for player's speed
@@ -115,33 +136,33 @@ void blinktext(int option1, int option2, int option3){
         thread_sleep_for(blinkonoff);
         lcd.locate(6,1);
         lcd.printf(" ");
-        thread_sleep_for(500);
+        thread_sleep_for(blinkonoff);
     }
 
     else if (abs(button1_right-button2_left) % 3 == 0 && abs(button1_right-button2_left) % 2 != 0){
         lcd.locate(4,1);
         lcd.putc(option3);
-        thread_sleep_for(500);
+        thread_sleep_for(blinkonoff);
         lcd.locate(4,1);
         lcd.printf(" ");
-        thread_sleep_for(500);
+        thread_sleep_for(blinkonoff);
     }
     else{
         if(abs(button1_right-button2_left) % 2 == 0){
             lcd.locate(2,1);
             lcd.putc(option2);
-            thread_sleep_for(500);
+            thread_sleep_for(blinkonoff);
             lcd.locate(2,1);
             lcd.printf(" ");
-            thread_sleep_for(500);
+            thread_sleep_for(blinkonoff);
         }
         else{
             lcd.locate(0,1);
             lcd.putc(option1);
-            thread_sleep_for(500);
+            thread_sleep_for(blinkonoff);
             lcd.locate(0,1);
             lcd.printf(" ");
-            thread_sleep_for(500);
+            thread_sleep_for(blinkonoff);
         }
     }
 }
@@ -159,17 +180,17 @@ void blinktext(int option1, int option2, int option3){
     }
 }*/
 
-/*void showInventory(){
+void showInventory(){
     if (abs(button1_right-button2_left) % 4 == 0 && buttonInventory == false){
         lcd.cls();
         lcd.locate(0,0);
-        lcd.printf(inventory[0]);
-        lcd.locate(0,1);
-        lcd.printf("Items");
+        lcd.putc(0x7F);
+        //lcd.locate(0,1);
+        //lcd.printf("Items");
         sleep();
 
     } 
-}*/
+}
 
 void button3Fn(){
     button3Semaphore.release();
