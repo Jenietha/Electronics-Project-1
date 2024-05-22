@@ -181,22 +181,56 @@ void blinktext(int option1, int option2, int option3){
 }*/
 
 void showInventory(){
-    if (abs(button1_right-button2_left) % 4 == 0 && buttonInventory == false){
+    //if (abs(button1_right-button2_left) % 4 == 0 && buttonInventory == false){
         lcd.cls();
+        
         lcd.locate(0,0);
+        lcd.printf("Knife");
+        lcd.locate(0,1);
+        lcd.printf("Lizard Dagger");
+        lcd.locate(15,0);
         lcd.putc(0x7F);
+
         //lcd.locate(0,1);
         //lcd.printf("Items");
         sleep();
 
     } 
-}
 
 void button3Fn(){
     button3Semaphore.release();
 }
 
 void mainscreen(){
+
+    lcd.locate(0,0);
+    Scroll("Very long scene description");
+
+    lcd.locate(8,1);
+    lcd.putc(0);
+
+    lcd.locate(9,1);
+    lcd.putc(1);
+
+    lcd.locate(10,1);
+    lcd.putc(2);
+
+    lcd.locate(11,1);
+    lcd.putc(3);
+
+    lcd.locate(12,1);
+    lcd.putc(4);
+
+    lcd.locate(13,1);
+    lcd.putc(5);
+
+    lcd.locate(14,1);
+    lcd.putc(6);
+
+    lcd.locate(15,1);
+    lcd.putc(7);
+
+
     lcd.locate(0,1);
     lcd.putc(exploreoptions[0]);
 
@@ -225,8 +259,8 @@ int main()
         lcd.writeData(healthicon[i]);
     }
 
-    lcd.locate(8,1);
-    lcd.putc(0);
+    //lcd.locate(8,1);
+    //lcd.putc(0);
 
     //health data
     lcd.writeCommand(customcharStartAddress + customcharAddressIncrement);
@@ -248,8 +282,8 @@ int main()
     }
 
 
-    lcd.locate(9,1);
-    lcd.putc(1);
+    //lcd.locate(9,1);
+    //lcd.putc(1);
 
     //Speed icon
     lcd.writeCommand(customcharStartAddress + 2*(customcharAddressIncrement));
@@ -258,8 +292,8 @@ int main()
         lcd.writeData(speedicon[i]);
     }
 
-    lcd.locate(10,1);
-    lcd.putc(2);
+    //lcd.locate(10,1);
+    //lcd.putc(2);
 
 
     lcd.writeCommand(customcharStartAddress + 3*(customcharAddressIncrement));
@@ -280,8 +314,8 @@ int main()
         lcd.writeData(speedlevel[u]);
     }
 
-    lcd.locate(11,1);
-    lcd.putc(3);
+    //lcd.locate(11,1);
+    //lcd.putc(3);
 
     //Defence icon
     lcd.writeCommand(customcharStartAddress + 4*(customcharAddressIncrement));
@@ -290,8 +324,8 @@ int main()
         lcd.writeData(defenceicon[i]);
     }
 
-    lcd.locate(12,1);
-    lcd.putc(4);
+    //lcd.locate(12,1);
+    //lcd.putc(4);
 
     //Defence data
     lcd.writeCommand(customcharStartAddress + 5*(customcharAddressIncrement));
@@ -312,8 +346,8 @@ int main()
         lcd.writeData(defencelevel[u]);
     }
 
-    lcd.locate(13,1);
-    lcd.putc(5);
+    //lcd.locate(13,1);
+    //lcd.putc(5);
 
     //Power icon
     lcd.writeCommand(customcharStartAddress + 6*(customcharAddressIncrement));
@@ -322,8 +356,8 @@ int main()
         lcd.writeData(powericon[i]);
     }
 
-    lcd.locate(14,1);
-    lcd.putc(6);
+    //lcd.locate(14,1);
+    //lcd.putc(6);
 
     //Power data
     lcd.writeCommand(customcharStartAddress + 7*(customcharAddressIncrement));
@@ -344,11 +378,11 @@ int main()
         lcd.writeData(powerlevel[u]);
     }
 
-    lcd.locate(15,1);
-    lcd.putc(7);
+    //lcd.locate(15,1);
+    //lcd.putc(7);
 
-    lcd.locate(0,0);
-    Scroll("Very long scene description");
+    //lcd.locate(0,0);
+    //Scroll("Very long scene description");
 
 
     while(true){
@@ -357,11 +391,11 @@ int main()
         button2left_counter();
         //showInventory();
 
-        mainscreen();
+        //mainscreen();
 
         
 
-        //showInventory();
+        showInventory();
 
         sleep();
 
