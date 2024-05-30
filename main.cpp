@@ -16,7 +16,7 @@ Version 3
 
 DigitalIn buttonright(D8, PullUp);
 DigitalIn buttonleft(D10, PullUp);
-InterruptIn button3(D7, PullUp);
+DigitalIn button3(D7, PullUp);
 InterruptIn buttonInventory(D12, PullUp);
 
 Semaphore button3Semaphore(0,1);
@@ -27,6 +27,7 @@ TextLCD lcd(D0, D1, D2, D3, D4, D5, TextLCD::LCD16x2); // Connect these nucleo p
 
 int button1_right = 1;
 int button2_left = 0;
+int button3press = 0;
 
 int customcharStartAddress = 0x40;
 int customcharAddressIncrement = 8;
@@ -39,7 +40,7 @@ int blinkonoff = 500;
 int exploreoptions[4] = {0x46, 0x42 ,0x4C, 0x52}; //actions during an exploration scene
 int battleoptions[4] = {1,2,3,0x25}; //actions during a battle scene
 
-string knife = "Knife";
+/*string knife = "Knife";
 string lizarddagger = "Lizard Dagger";
 string lizardknife = "Lizard Knife";
 string stick = "Wooden Stick";
@@ -57,28 +58,40 @@ string woodenboard = "Wooden Board";
 string greencrystal = "Green Crystal";
 string redcrystal = "Red Crystal";
 string bluecrystal = "Blue Crystal";
+*/
+/*
+const char *knifepointer = "Knife";
+const char *lizarddaggerpointer = "Lizard Dagger";
+const char *lizardknifepointer = "Lizard Knife";
+const char *stickpointer = "Stick";
+const char *wolfpawpointer = "Wolf Paw";
+const char *wolfskinpointer = "Wolf Skin";
+const char *skeletonbladepointer = "Skeleton Blade";
+const char *hammerpointer = "Hammer";
+*/
 
-int * knifepointer = &knife;
-int * lizarddaggerpointer = &lizarddagger;
-int * lizardknifepointer = &lizardknife;
-int * stickpointer = &stick;
-int * wolfpawpointer = &wolfpaw;
-int * wolfskinpointer = &wolfskin;
-int * skeletonbladepointer = &skeletonblade;
-int * hammerpointer = &hammer;
-int * stoneglovespointer = &stonegloves;
-int * stonearmourpointer = &stonearmour;
-int * flamingswordpointer = &flamingsword;
-int * breakerhammerpointer = &breakerhammer;
-int * armouredlizardskinpointer = &armouredlizardskin;
-int * flowingarmourpointer = &flowingarmour;
-int * woodenboardpointer = &woodenboard;
-int * greencrystalpointer = &greencrystal;
-int * redcrystalpointer = &redcrystal;
-int * bluecrystalpointer = &bluecrystal;
+char const * knifepointer = "Knife";
+char const * lizarddaggerpointer = "Lizard Dagger";
+char const * lizardknifepointer = "Lizard Knife";
+char const * stickpointer = "Stick";
+/*
+//int * skeletonbladepointer = &skeletonblade;
+//int * hammerpointer = &hammer;
+//int * stoneglovespointer = &stonegloves;
+//int * stonearmourpointer = &stonearmour;
+//int * flamingswordpointer = &flamingsword;
+//int * breakerhammerpointer = &breakerhammer;
+//int * armouredlizardskinpointer = &armouredlizardskin;
+//int * flowingarmourpointer = &flowingarmour;
+//int * woodenboardpointer = &woodenboard;
+//int * greencrystalpointer = &greencrystal;
+//int * redcrystalpointer = &redcrystal;
+//int * bluecrystalpointer = &bluecrystal;
+*/
 
+//const char inventory[14] = {*knifepointer,*lizarddaggerpointer,*stickpointer,*wolfpawpointer};
+char const * inventory[] = {knifepointer, lizarddaggerpointer, lizardknifepointer, stickpointer};
 
-char inventory[14] = {};
 
 int healthvalue=20; //initial value for player's health
 int speedvalue=40; //initial value for player's speed
@@ -104,6 +117,18 @@ int button2left_counter(){
         ++button2_left;    
     }
     return button2_left;
+}
+
+int button3_counter(){
+    if(button3 == false){
+        if(button3press >3 ){
+            button3press = 0;
+        }
+        else{
+            ++button3press;
+        }
+    }
+    return button3press;
 }
 
 //character for player's health
@@ -189,7 +214,7 @@ void blinktext(int option1, int option2, int option3){
 
 /*void showInventory(){
     if(buttonInventory == false){
-        for(int i = 0; i<4; i=i+2){
+        for(int i = 0; i<4; i++){
             lcd.cls();
             lcd.locate(0,0);
             lcd.printf(inventory[i]);
@@ -200,23 +225,74 @@ void blinktext(int option1, int option2, int option3){
     }
 }*/
 
+/*void printitem(char const * item, int rownum){
+    for (int i = 0; i < strlen(item); ++i){
+        lcd.locate(i,rownum);
+        lcd.printf("%s",*(item));
+    }
+}*/
+
+
 void showInventory(){
-    //if (abs(button1_right-button2_left) % 4 == 0 && buttonInventory == false){
-        //lcd.cls();
-        
-        lcd.locate(0,0);
-        lcd.printf("Knife");
+    //if (abs(button1_right-button2_left) % 4 == 0 && button3 == false){
+
+        lcd.cls();
         lcd.locate(15,0);
         lcd.putc(0x7F);
+
+        for (int i =0; i < 4; ++i){
+
+            if(i == 3){
+                lcd.cls();
+                lcd.locate(0,0);
+                lcd.printf("%s",inventory[i]);
+            }
+            else{
+                lcd.cls();
+                lcd.locate(0,0);
+                lcd.printf("%s",inventory[i]);
+
+                lcd.locate(0,1);
+                lcd.printf("%s",inventory[i+1]);
+
+            }
+            
+            thread_sleep_for(2000);
+        }
+
+
+
+        /*lcd.locate(0,0);
+        lcd.printf("%s",inventory[0]);
+
         lcd.locate(0,1);
-        lcd.printf("Lizard Dagger");
+        lcd.printf("%s",inventory[1]);*/
+
+        /*button3_counter();
+
+        while(true){
+            if (button3press >= 3){
+                button3press = 0;
+            }
+
+            if(button3 == true){
+                //lcd.cls();
+                lcd.locate(0,0);
+                lcd.printf("%s",inventory[button3press]);
+
+                lcd.locate(0,1);
+                lcd.printf("%s",inventory[button3press++]);
+
+            }
+
+            
+
+        }*/
+
         
 
-        //lcd.locate(0,1);
-        //lcd.printf("Items");
-        sleep();
-
     } 
+//}
 
 void button3Fn(){
     button3Semaphore.release();
@@ -382,17 +458,25 @@ int main()
         lcd.writeData(powerlevel[u]);
     }
 
+    showInventory();
+
 
     while(true){
 
         button1right_counter();
         button2left_counter();
+        button3_counter();
 
         //mainscreen();
+        /*if(button3 == false){
+            printf("%s\n",inventory[button3press]);
+            thread_sleep_for(2000);
+            printf("%s\n",inventory[button3press+1]);
+        }*/
 
         
 
-        showInventory();
+        //showInventory();
 
         sleep();
 
