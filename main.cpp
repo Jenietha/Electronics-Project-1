@@ -59,44 +59,19 @@ string greencrystal = "Green Crystal";
 string redcrystal = "Red Crystal";
 string bluecrystal = "Blue Crystal";
 */
-/*
-const char *knifepointer = "Knife";
-const char *lizarddaggerpointer = "Lizard Dagger";
-const char *lizardknifepointer = "Lizard Knife";
-const char *stickpointer = "Stick";
-const char *wolfpawpointer = "Wolf Paw";
-const char *wolfskinpointer = "Wolf Skin";
-const char *skeletonbladepointer = "Skeleton Blade";
-const char *hammerpointer = "Hammer";
-*/
 
 char const * knifepointer = "Knife";
 char const * lizarddaggerpointer = "Lizard Dagger";
 char const * lizardknifepointer = "Lizard Knife";
 char const * stickpointer = "Stick";
-/*
-//int * skeletonbladepointer = &skeletonblade;
-//int * hammerpointer = &hammer;
-//int * stoneglovespointer = &stonegloves;
-//int * stonearmourpointer = &stonearmour;
-//int * flamingswordpointer = &flamingsword;
-//int * breakerhammerpointer = &breakerhammer;
-//int * armouredlizardskinpointer = &armouredlizardskin;
-//int * flowingarmourpointer = &flowingarmour;
-//int * woodenboardpointer = &woodenboard;
-//int * greencrystalpointer = &greencrystal;
-//int * redcrystalpointer = &redcrystal;
-//int * bluecrystalpointer = &bluecrystal;
-*/
 
-//const char inventory[14] = {*knifepointer,*lizarddaggerpointer,*stickpointer,*wolfpawpointer};
 char const * inventory[] = {knifepointer, lizarddaggerpointer, lizardknifepointer, stickpointer};
 
 
-int healthvalue=20; //initial value for player's health
-int speedvalue=40; //initial value for player's speed
-int defencevalue=40; //initial value for player's defensive strength
-int powervalue=40; //initial value for player's offensive strength
+int healthvalue=5; //initial value for player's health
+int speedvalue=6; //initial value for player's speed
+int defencevalue=4; //initial value for player's defensive strength
+int powervalue=4; //initial value for player's offensive strength
 
 int healthmaxvalue = 40;
 int speedmaxvalue = 40;
@@ -211,26 +186,61 @@ void blinktext(int option1, int option2, int option3){
     }
 }
 
-/*void showInventory(){
-    if(buttonInventory == false){
-        for(int i = 0; i<4; i++){
-            lcd.cls();
-            lcd.locate(0,0);
-            lcd.printf(inventory[i]);
-            lcd.locate(0,1);
-            lcd.printf(inventory[++i]);
-            thread_sleep_for(2000);
-        }
-    }
-}*/
+void displaystats(){
+    lcd.locate(8,1);
+    lcd.putc(0);
 
-/*void printitem(char const * item, int rownum){
-    for (int i = 0; i < strlen(item); ++i){
-        lcd.locate(i,rownum);
-        lcd.printf("%s",*(item));
-    }
-}*/
+    lcd.locate(9,1);
+    lcd.putc(1);
 
+    lcd.locate(10,1);
+    lcd.putc(2);
+
+    lcd.locate(11,1);
+    lcd.putc(3);
+
+    lcd.locate(12,1);
+    lcd.putc(4);
+
+    lcd.locate(13,1);
+    lcd.putc(5);
+
+    lcd.locate(14,1);
+    lcd.putc(6);
+
+    lcd.locate(15,1);
+    lcd.putc(7);
+
+}
+
+
+void option1(){
+    Scroll("You enter the forest.");
+    displaystats();
+
+
+
+    sleep();
+
+}
+
+void option2(){
+    Scroll("You win the fight.");
+    thread_sleep_for(2000);
+    Scroll("You obtain a knife.");
+
+    displaystats();
+
+    sleep();
+
+}
+
+void option3(){
+    Scroll("You are caught up by the goblin.")
+    displaystats();
+    sleep();
+
+}
 
 void showInventory(){
     //if (abs(button1_right-button2_left) % 4 == 0 && button3 == false){
@@ -239,20 +249,24 @@ void showInventory(){
         lcd.locate(15,0);
         lcd.putc(0x7F);
 
-        for (int button3press =0; i < 4; ++i){
+         
 
-            if(i == 3){
+        for (int button3press = 0; button3press < 4; ++button3press){
+
+            button3_counter();
+
+            if(button3press == 3){
                 lcd.cls();
                 lcd.locate(0,0);
-                lcd.printf("%s",inventory[i]);
+                lcd.printf("%s",inventory[button3press]);
             }
             else{
                 lcd.cls();
                 lcd.locate(0,0);
-                lcd.printf("%s",inventory[i]);
+                lcd.printf("%s",inventory[button3press]);
 
                 lcd.locate(0,1);
-                lcd.printf("%s",inventory[i+1]);
+                lcd.printf("%s",inventory[button3press+1]);
 
             }
             
@@ -297,49 +311,32 @@ void button3Fn(){
     button3Semaphore.release();
 }
 
+
+
 void mainscreen(){
 
     lcd.locate(0,0);
-    Scroll("Very long scene description");
+    Scroll("You enter the plains.");
+    thread_sleep_for(3000);
 
-    lcd.locate(8,1);
-    lcd.putc(0);
+    Scroll("You encounter a goblin.");
 
-    lcd.locate(9,1);
-    lcd.putc(1);
-
-    lcd.locate(10,1);
-    lcd.putc(2);
-
-    lcd.locate(11,1);
-    lcd.putc(3);
-
-    lcd.locate(12,1);
-    lcd.putc(4);
-
-    lcd.locate(13,1);
-    lcd.putc(5);
-
-    lcd.locate(14,1);
-    lcd.putc(6);
-
-    lcd.locate(15,1);
-    lcd.putc(7);
+    displaystats();
 
 
     lcd.locate(0,1);
-    lcd.putc(exploreoptions[0]);
+    lcd.putc(battleoptions[0]);
 
     lcd.locate(2,1);
-    lcd.putc(exploreoptions[2]);
+    lcd.putc(battleoptions[1]);
 
     lcd.locate(4,1);
-    lcd.putc(exploreoptions[3]);
+    lcd.putc(battleoptions[3]);
 
     lcd.locate(6,1);
     lcd.printf("i");
 
-    blinktext(exploreoptions[0], exploreoptions[2], exploreoptions[3]);
+    blinktext(battleoptions[0], battleoptions[1], battleoptions[3]);
     
 }
 
@@ -457,16 +454,22 @@ int main()
         lcd.writeData(powerlevel[u]);
     }
 
-    showInventory();
+    Scroll("Welcome to the RPG!");
+    thread_sleep_for(5000);
+
+    Scroll("You leave the village");
+    thread_sleep_for(2000);
+
+    //showInventory();
 
 
     while(true){
 
         button1right_counter();
         button2left_counter();
-        button3_counter();
+        //button3_counter();
 
-        //mainscreen();
+        mainscreen();
         /*if(button3 == false){
             printf("%s\n",inventory[button3press]);
             thread_sleep_for(2000);
@@ -475,7 +478,7 @@ int main()
 
         
 
-        //showInventory();
+        showInventory();
 
         sleep();
 
