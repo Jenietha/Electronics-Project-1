@@ -103,7 +103,6 @@ int speedmaxvalue = 40;
 int defencemaxvalue = 40;
 int powermaxvalue = 40;
 
-//char * inventory[4] = {'Knife', 'Plank', 'Stick', 'Armor'}; //declare each string separately, get pointer of first character of each string and add that to array
 
 int button1right_counter(){
     if(buttonright == false){
@@ -240,7 +239,7 @@ void showInventory(){
         lcd.locate(15,0);
         lcd.putc(0x7F);
 
-        for (int i =0; i < 4; ++i){
+        for (int button3press =0; i < 4; ++i){
 
             if(i == 3){
                 lcd.cls();
